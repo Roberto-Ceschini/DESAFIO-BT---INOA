@@ -3,23 +3,26 @@ using System.Net.Mail;
 
 public class EmailService
 {
-    public void SendEmail(string para, string subject, string body)
+    private readonly EmailSettings settings;
+
+    public EmailService(EmailSettings settings)
+    {
+        this.settings = settings;
+    }
+    public void SendEmail(string subject, string body)
     {
         try
         {
 
-            SmtpClient smtpClient = new ("smtp.gmail.com", 587);
+            SmtpClient smtpClient = new (settings.SmtpServer, settings.SmtpPort);
 
-            // set smtp-client with basicAuthentication
-            //smtpClient.UseDefaultCredentials = false; //O valor default já é false
-
-            System.Net.NetworkCredential basicAuthenticationInfo = new ("email", "password");
+            NetworkCredential basicAuthenticationInfo = new (settings.From, settings.Password);
             smtpClient.Credentials = basicAuthenticationInfo;
-            smtpClient.EnableSsl = true; //A IA sugeriu habilitar SSL por segurança
+            smtpClient.EnableSsl = settings.EnableSsl; //Esta linha foi sugestão de IA para segurança
 
             // add from,to mailaddresses
-            MailAddress from = new("robert17ceschini@gmail.com", "TesteOrigem");
-            MailAddress to = new("endorsedjam.20221@poli.ufrj.br", "TesteDestino");
+            MailAddress from = new(settings.From, "Desafio BT - INOA");
+            MailAddress to = new(settings.To);
             MailMessage mail = new(from, to)
             {
                 // add ReplyTo
@@ -27,11 +30,11 @@ public class EmailService
                 //myMail.ReplyToList.Add(replyTo);
 
                 // set subject and encoding
-                Subject = "Test message",
+                Subject = subject,
                 SubjectEncoding = System.Text.Encoding.UTF8,
 
                 // set body-message and encoding
-                Body = "<b>Test Mail</b><br>using <b>HTML</b>.",
+                Body = body,
                 BodyEncoding = System.Text.Encoding.UTF8,
                 // text or html
                 IsBodyHtml = true
@@ -42,8 +45,7 @@ public class EmailService
 
         catch (SmtpException ex)
         {
-            throw new ApplicationException
-              ("SmtpException has occured: " + ex.Message);
+            throw new ApplicationException ("SmtpException has occured: " + ex.Message);
         }
     }
 }
