@@ -3,50 +3,47 @@ using System.Net.Mail;
 
 public class EmailService
 {
-    public void SendEmail(string to, string subject, string body)
+    public void SendEmail(string para, string subject, string body)
     {
         try
         {
 
-            SmtpClient mySmtpClient = new SmtpClient("my.smtp.exampleserver.net", 587);
+            SmtpClient smtpClient = new ("smtp.gmail.com", 587);
 
             // set smtp-client with basicAuthentication
-            //mySmtpClient.UseDefaultCredentials = false; //The default value is false
+            //smtpClient.UseDefaultCredentials = false; //O valor default já é false
 
-            System.Net.NetworkCredential basicAuthenticationInfo = new ("username", "password");
-            mySmtpClient.Credentials = basicAuthenticationInfo;
-            mySmtpClient.EnableSsl = true; //A IA sugeriu habilitar SSL por segurança
+            System.Net.NetworkCredential basicAuthenticationInfo = new ("email", "password");
+            smtpClient.Credentials = basicAuthenticationInfo;
+            smtpClient.EnableSsl = true; //A IA sugeriu habilitar SSL por segurança
 
             // add from,to mailaddresses
-            MailAddress from = new MailAddress("test@example.com", "TestFromName");
-            MailAddress to = new MailAddress("test2@example.com", "TestToName");
-            MailMessage myMail = new System.Net.Mail.MailMessage(from, to);
+            MailAddress from = new("robert17ceschini@gmail.com", "TesteOrigem");
+            MailAddress to = new("endorsedjam.20221@poli.ufrj.br", "TesteDestino");
+            MailMessage mail = new(from, to)
+            {
+                // add ReplyTo
+                //MailAddress replyTo = new MailAddress("reply@example.com");
+                //myMail.ReplyToList.Add(replyTo);
 
-            // add ReplyTo
-            //MailAddress replyTo = new MailAddress("reply@example.com");
-            //myMail.ReplyToList.Add(replyTo);
+                // set subject and encoding
+                Subject = "Test message",
+                SubjectEncoding = System.Text.Encoding.UTF8,
 
-            // set subject and encoding
-            myMail.Subject = "Test message";
-            myMail.SubjectEncoding = System.Text.Encoding.UTF8;
+                // set body-message and encoding
+                Body = "<b>Test Mail</b><br>using <b>HTML</b>.",
+                BodyEncoding = System.Text.Encoding.UTF8,
+                // text or html
+                IsBodyHtml = true
+            };
 
-            // set body-message and encoding
-            myMail.Body = "<b>Test Mail</b><br>using <b>HTML</b>.";
-            myMail.BodyEncoding = System.Text.Encoding.UTF8;
-            // text or html
-            myMail.IsBodyHtml = true;
-
-            mySmtpClient.Send(myMail);
+            smtpClient.Send(mail);
         }
 
         catch (SmtpException ex)
         {
             throw new ApplicationException
               ("SmtpException has occured: " + ex.Message);
-        }
-        catch (Exception ex)
-        {
-            throw ex;
         }
     }
 }

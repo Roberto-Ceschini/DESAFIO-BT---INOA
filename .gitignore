@@ -1,0 +1,29 @@
+#ESTE ARQUIVO FOI GERADO POR IA
+
+# .NET
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# VS Code
+.vscode/
+
+# Build
+Debug/
+Release/
+
+# Logs
+*.log
+
+# Configurações locais / segredos
+appsettings.Development.json
+.env
+.env.*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

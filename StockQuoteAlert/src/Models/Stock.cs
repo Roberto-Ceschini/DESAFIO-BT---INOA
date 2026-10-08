@@ -10,7 +10,7 @@ public class Stock
 
     public void AddQuote(decimal price, DateTime date)
     {
-        Quote quote = new Quote(price, date);
+        Quote quote = new(price, date);
         quotes.Add(quote);
     }
 
