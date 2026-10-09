@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
 
         //--------------------------------IA--------------------------
@@ -11,15 +11,23 @@ public class Program
         .AddUserSecrets<Program>()
         .Build();
 
-        EmailSettings settings = configuration.GetSection("EmailSettings")
+        EmailSettings emailsettings = configuration.GetSection("EmailSettings")
         .Get<EmailSettings>()
         ?? throw new Exception("EmailSettings não encontrado.");
+
+        ApiSettings apiSettings = configuration.GetSection("ApiSettings")
+        .Get<ApiSettings>()
+        ?? throw new Exception("ApiSettings não encontrado.");
+
+        HttpClient httpClient = new HttpClient();
         //--------------------------------fim IA--------------------------
 
-        EmailService emailService = new EmailService(settings);
+        ApiService apiService = new ApiService(httpClient, apiSettings);
+        //EmailService emailService = new EmailService(emailsettings);
 
-        emailService.SendEmail("Teste","<b>Email appsettings + User Secrets</b>");
+        string response = await apiService.GetStockQuoteAsync("PETR4");
 
-        Console.WriteLine("Email enviado com sucesso.");
+        //emailService.SendEmail("Teste","<b>Email appsettings + User Secrets</b>");
+        //Console.WriteLine("Email enviado com sucesso.");
     }
 }

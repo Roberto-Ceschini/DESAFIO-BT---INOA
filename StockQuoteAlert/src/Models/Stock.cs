@@ -1,11 +1,11 @@
 public class Stock
 {
-    public string Name { get; }
+    public string Symbol { get; }
     private readonly List<Quote> quotes = new();
 
-    public Stock(string name)
+    public Stock(string symbol)
     {
-        Name = name;
+        Symbol = symbol;
     }
 
     public void AddQuote(decimal price, DateTime date)
