@@ -25,7 +25,8 @@ public class Program
         ApiService apiService = new ApiService(httpClient, apiSettings);
         //EmailService emailService = new EmailService(emailsettings);
 
-        string response = await apiService.GetStockQuoteAsync("PETR4");
+        StockQuoteResponse response = await apiService.GetStockQuoteAsync("PETR4");
+        Console.WriteLine($"cota: {response.RegularMarketPrice}, data: {response.RegularMarketTime}, simbolo: {response.Symbol}");
 
         //emailService.SendEmail("Teste","<b>Email appsettings + User Secrets</b>");
         //Console.WriteLine("Email enviado com sucesso.");
