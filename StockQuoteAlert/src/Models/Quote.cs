@@ -1,14 +1,14 @@
 public class Quote
 {
-    public decimal Price { get; }
-    public DateTime Date { get; }
+    public decimal RegularMarketPrice { get; }
+    public DateTime RegularMarketTime { get; }
 
-    public Quote(decimal price, DateTime date)
+    public Quote(decimal regularMarketPrice, DateTime regularMarketTime)
     {
-        ValidatePrice(price);
+        ValidatePrice(regularMarketPrice);
 
-        Price = price;
-        Date = date;
+        RegularMarketPrice = regularMarketPrice;
+        RegularMarketTime = regularMarketTime;
     }
 
     private void ValidatePrice(decimal price)
