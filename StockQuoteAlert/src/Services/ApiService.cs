@@ -16,9 +16,8 @@ public class ApiService
     {
         var response = await client.GetAsync($"{baseUrl}{symbol}");
         response.EnsureSuccessStatusCode();//A IA sugeriu essa linha para garantir que a resposta seja bem sucedida
-
         string content = await response.Content.ReadAsStringAsync();
-        
+
         return FilterGetResponse(content);
     }
 
