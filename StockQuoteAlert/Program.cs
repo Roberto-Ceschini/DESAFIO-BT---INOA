@@ -1,34 +1,64 @@
 ﻿using Microsoft.Extensions.Configuration;
+
 public class Program
 {
     public static async Task Main(string[] args)
     {
+        try
+        {
+            HandleUserExpectedErrors(args);
 
-        //--------------------------------IA--------------------------
-        IConfiguration configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .AddUserSecrets<Program>()
-        .Build();
+            string symbol = args[0].ToUpper();
+            decimal sellPrice = decimal.Parse(args[1]);
+            decimal buyPrice = decimal.Parse(args[2]);
 
-        EmailSettings emailsettings = configuration.GetSection("EmailSettings")
-        .Get<EmailSettings>()
-        ?? throw new Exception("EmailSettings não encontrado.");
+            Stock stock = new(symbol, sellPrice, buyPrice);
 
-        ApiSettings apiSettings = configuration.GetSection("ApiSettings")
-        .Get<ApiSettings>()
-        ?? throw new Exception("ApiSettings não encontrado.");
+            //-------Codigo gerado por IA para configuracao------------------
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .AddUserSecrets<Program>()
+                .Build();
 
-        HttpClient httpClient = new HttpClient();
-        //--------------------------------fim IA--------------------------
+            EmailSettings emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>()
+            ?? throw new Exception("EmailSettings não encontrado.");
 
-        ApiService apiService = new ApiService(httpClient, apiSettings);
-        //EmailService emailService = new EmailService(emailsettings);
+            ApiSettings apiSettings = configuration.GetSection("ApiSettings").Get<ApiSettings>()
+            ?? throw new Exception("ApiSettings não encontrado.");
+            //----------Fim codigo IA -----------------------------------
 
-        StockQuoteResponse response = await apiService.GetStockQuoteAsync("PETR4");
-        Console.WriteLine($"cota: {response.RegularMarketPrice}, data: {response.RegularMarketTime}, simbolo: {response.Symbol}");
+            HttpClient httpClient = new();
 
-        //emailService.SendEmail("Teste","<b>Email appsettings + User Secrets</b>");
-        //Console.WriteLine("Email enviado com sucesso.");
+            ApiService apiService = new (httpClient, apiSettings);
+            EmailService emailService = new (emailSettings);
+
+            MonitoringService monitoringService = new(apiService, emailService);
+
+            Console.WriteLine($"Monitorando {stock.Symbol}...");
+
+            await monitoringService.MonitorStockQuoteAsync(stock);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private static void HandleUserExpectedErrors(string[] args)
+    {
+        if (args.Length != 3)
+        {
+            throw new ArgumentException("Uso correto exemplo: stock-quote-alert PETR4 22.67 22.59");
+        }
+
+        //As linhas abaixo foram geradas por IA pois eu nao sabia da funcao TryParse do C#
+        if (!decimal.TryParse(args[1], out _)
+            || !decimal.TryParse(args[2], out _))
+        {
+            throw new ArgumentException(
+                "Os preços informados são inválidos."
+            );
+        }
     }
 }
