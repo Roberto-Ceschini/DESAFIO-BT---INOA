@@ -60,7 +60,8 @@ public class MonitoringService
             catch (HttpRequestException) when (attempt < MaxApiAttempts)
             {
                 Console.WriteLine(
-                    $"Falha ao consultar {symbol}. Nova tentativa em {RetryDelay.TotalSeconds} segundos " +
+                    $"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] Falha ao consultar {symbol}. " +
+                    $"Nova tentativa em {RetryDelay.TotalSeconds} segundos " +
                     $"({attempt}/{MaxApiAttempts})."
                 );
 

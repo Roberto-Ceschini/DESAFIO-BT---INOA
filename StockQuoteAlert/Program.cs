@@ -36,13 +36,13 @@ public class Program
 
             MonitoringService monitoringService = new(apiService, emailService);
 
-            Console.WriteLine($"Monitorando {stock.Symbol}...");
+            Console.WriteLine($"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] Monitorando {stock.Symbol}...");
 
             await monitoringService.MonitorStockQuoteAsync(stock);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.Error.WriteLine($"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] {ex.Message}");
         }
     }
 

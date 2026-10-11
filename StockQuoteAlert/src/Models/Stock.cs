@@ -38,5 +38,12 @@ public class Stock
                 "O preço de venda deve ser maior que o preço de compra."
             ); //Usei IA para indicar a excecão mais adequada nesse caso.
         }
+
+        else if (sellPrice < 0 || buyPrice < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                "Os preços de venda e compra não devem ser negativos."
+            ); //Usei IA para indicar a excecão mais adequada nesse caso.
+        }
     }
 }

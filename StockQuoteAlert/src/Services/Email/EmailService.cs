@@ -64,7 +64,7 @@ public class EmailService
         );//Esta linha foi gerada com IA, como inspiração de paleta, o site https://inoa.com/
 
         SendEmail(subject, body);
-        Console.WriteLine($"Alerta de compra enviado para {stock.Symbol}.");
+        Console.WriteLine($"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] Alerta de compra enviado para {stock.Symbol}.");
     }
 
     public void SendSellAlert(Stock stock, StockQuoteResponse response)
@@ -82,6 +82,6 @@ public class EmailService
         );//Esta linha foi gerada com IA, como inspiração de paleta, o site https://inoa.com/
 
         SendEmail(subject, body);
-        Console.WriteLine($"Alerta de venda enviado para {stock.Symbol}.");
+        Console.WriteLine($"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] Alerta de venda enviado para {stock.Symbol}.");
     }
 }
