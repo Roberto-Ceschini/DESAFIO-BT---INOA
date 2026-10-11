@@ -163,7 +163,7 @@ Dados sensíveis, como senha SMTP e token da API, são armazenados com `.NET Use
 
 ## Uso de Inteligência Artificial
 
-O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas específicas e sintaxe de C#/.NET. A lógica principal, as decisões arquiteturais e a solução final foram desenvolvidas e revisadas.
+O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas específicas, escolha dos tipos de erros e sintaxe de C#/.NET. A lógica principal, as decisões arquiteturais e a solução final foram desenvolvidas e revisadas.
 
 | Arquivo | Finalidade | Uso da IA |
 | --- | --- | --- |
@@ -178,6 +178,7 @@ O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas espec
 | `MonitoringService.cs` | Retry da API | Implementação do método `GetStockQuoteWithRetryAsync`. |
 | `EmailService.cs` | SSL no SMTP | Sugestão de incluir uma linha habilitando o SSL no envio de emails. |
 | `EmailTemplate.cs` | Template HTML | construção e organização visual do e-mail de alerta baseado no site oficial da INOA. |
+
 
 ## Possíveis melhorias
 
