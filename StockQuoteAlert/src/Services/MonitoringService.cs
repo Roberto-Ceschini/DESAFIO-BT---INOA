@@ -1,5 +1,8 @@
 public class MonitoringService
 {
+    private const int MaxApiAttempts = 3;//Linha gerada por IA
+    private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(5); //Linnha gerada por IA
+
     private readonly ApiService apiService;
     private readonly EmailService emailService;
     private enum PriceZone
@@ -23,7 +26,7 @@ public class MonitoringService
         while (true)
         {
             // Fetch the stock quote from the API
-            StockQuoteResponse response = await apiService.GetStockQuoteAsync(stock.Symbol);
+            StockQuoteResponse response = await GetStockQuoteWithRetryAsync(stock.Symbol);
 
             decimal currentPrice = response.RegularMarketPrice;
 
@@ -40,6 +43,37 @@ public class MonitoringService
             previousZone = currentZone;
 
             await Task.Delay(5000);
+        }
+    }
+
+    //O código da função abaixo foi gerado pela IA como auxilio na para melhorar a robustez do monitoramento, com tentativas de reconexão em caso de falha na API.
+    private async Task<StockQuoteResponse> GetStockQuoteWithRetryAsync(string symbol)
+    {
+        int attempt = 1;
+
+        while (true)
+        {
+            try
+            {
+                return await apiService.GetStockQuoteAsync(symbol);
+            }
+            catch (HttpRequestException) when (attempt < MaxApiAttempts)
+            {
+                Console.WriteLine(
+                    $"Falha ao consultar {symbol}. Nova tentativa em {RetryDelay.TotalSeconds} segundos " +
+                    $"({attempt}/{MaxApiAttempts})."
+                );
+
+                attempt++;
+                await Task.Delay(RetryDelay);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException(
+                    $"Não foi possível obter a cotação de {symbol} após {MaxApiAttempts} tentativas.",
+                    ex
+                );
+            }
         }
     }
 
