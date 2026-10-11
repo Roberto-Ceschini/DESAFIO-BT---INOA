@@ -91,11 +91,11 @@ Durante a execução:
 - se o ticker não for encontrado, a aplicação informa o erro e encerra;
 - falhas temporárias da API são tratadas com até três tentativas antes de encerrar o monitoramento.
 
-O sistema controla a faixa anterior do preço para evitar o envio repetido de e-mails enquanto o ativo permanecer na mesma condição de compra ou venda.
+# Para os Avaliadores 
 
 ## Arquitetura
 
-O projeto foi mantido simples, mas com separação de responsabilidades entre domínio, integração e orquestração.
+Estrutura de pastas:
 
 ```text
 StockQuoteAlert/
@@ -121,13 +121,13 @@ StockQuoteAlert/
 
 ### Models
 
-`Stock` representa o ativo monitorado e concentra regras relacionadas ao próprio domínio, como os limites de compra e venda e o histórico de cotações.
+`Stock` representa o ativo monitorado 
 
-`Quote` representa uma cotação em determinado instante. Após criada, seus valores não são alterados.
+`Quote` representa uma cotação em determinado instante.
 
 ### DTOs
 
-Os DTOs representam apenas o formato necessário para interpretar as respostas da Brapi. Isso evita acoplar diretamente as entidades de domínio ao formato externo da API.
+Os DTOs representam o formato necessário para interpretar as respostas da Brapi.
 
 ### ApiService
 
@@ -144,57 +144,40 @@ Registrar cotação
         ↓
 Identificar faixa de preço
         ↓
-Verificar mudança de estado
-        ↓
 Enviar alerta, se necessário
         ↓
 Aguardar nova consulta
 ```
 
-Foi utilizado um estado de preço (`Buy`, `Neutral`, `Sell` e `Unknown`) para impedir múltiplos disparos enquanto a cotação continuar na mesma faixa.
-
 ### EmailService
 
 Responsável pela configuração SMTP e envio dos alertas.
 
-A construção visual do HTML foi separada em `EmailTemplate`, mantendo a responsabilidade de envio isolada da apresentação do e-mail.
+A construção visual do HTML foi separada em `EmailTemplate`.
 
 ### Configurações e segredos
 
 As configurações comuns ficam no `appsettings.json`.
 
-Dados sensíveis, como senha SMTP e token da API, são armazenados com `.NET User Secrets` e não são versionados.
-
-## Decisões técnicas
-
-- `decimal` foi utilizado para valores monetários.
-- `HttpClient` é reutilizado durante a execução da aplicação.
-- `async/await` é utilizado nas chamadas HTTP e no fluxo de monitoramento.
-- Os limites de compra e venda pertencem ao `Stock` monitorado e podem ser atualizados por métodos controlados da entidade.
-- A primeira consulta à API também funciona como validação prática do ticker, evitando uma requisição adicional apenas para confirmar sua existência.
-- O monitoramento tenta novamente a consulta em caso de falhas temporárias da API antes de encerrar.
-- O envio de alertas ocorre apenas quando o ativo entra em uma nova faixa de compra ou venda, evitando spam de e-mails.
+Dados sensíveis, como senha SMTP e token da API, são armazenados com `.NET User Secrets` e não foram versionados.
 
 ## Uso de Inteligência Artificial
 
-O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas específicas de C#/.NET, integração e apresentação. A lógica principal, as decisões arquiteturais e a solução final foram desenvolvidas e revisadas durante a implementação.
+O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas específicas e sintaxe de C#/.NET. A lógica principal, as decisões arquiteturais e a solução final foram desenvolvidas e revisadas.
 
 | Arquivo | Finalidade | Uso da IA |
 | --- | --- | --- |
-| `.gitignore` | Regras de arquivos ignorados pelo Git | Geração de uma configuração inicial adequada a projetos .NET e ambientes comuns de desenvolvimento. |
+| `.gitignore` | Regras de arquivos ignorados pelo Git | Criação desse arquivo com uma configuração inicial adequada a projetos .NET e ambientes comuns de desenvolvimento. |
 | `Program.cs` | `ConfigurationBuilder`, `appsettings.json` e User Secrets | Apoio na configuração das diferentes fontes de parâmetros e no binding para as classes de settings. |
-| `Program.cs` | Validação dos preços com `decimal.TryParse` | Sugestão de uma forma segura de validar valores numéricos sem lançar exceções durante a conversão. |
-| `Quote.cs` | `ArgumentOutOfRangeException` | Apoio na escolha da exceção mais adequada para um valor numérico fora do intervalo permitido. |
-| `Stock.cs` | `ArgumentException` | Apoio na escolha da exceção para uma combinação inválida entre preço de compra e venda. |
+| `Program.cs` | Validação dos preços com `decimal.TryParse` | Sugestão de uma forma segura de validar valores numéricos |
 | `BrapiApiResponse.cs` | DTOs da Brapi | Apoio na modelagem das classes utilizadas na desserialização do JSON retornado pela API. |
-| `ApiService.cs` | `EnsureSuccessStatusCode()` | Sugestão de validação para respostas HTTP malsucedidas. |
-| `ApiService.cs` | Inicialização de `StockQuoteResponse` | Explicação da sintaxe de inicialização de objetos em C#. |
+| `ApiService.cs` | `EnsureSuccessStatusCode()` | Sugestão dessa linha para validação de respostas HTTP malsucedidas que não foram mapeadas. |
+| `ApiService.cs` | Inicialização de `StockQuoteResponse` | Explicação da sintaxe de inicialização de objetos sem construtor em C#. |
 | `MonitoringService.cs` | Constantes da política de retry | Apoio para centralizar o número de tentativas e intervalo entre novas consultas. |
-| `MonitoringService.cs` | Estado inicial `Unknown` | Sugestão de uma forma de representar a primeira execução antes de existir uma faixa anterior. |
-| `MonitoringService.cs` | Retry da API | Apoio na implementação de até três tentativas para falhas temporárias. |
-| `EmailService.cs` | SSL no SMTP | Sugestão de habilitar comunicação segura no envio dos e-mails. |
-| `EmailService.cs` | Cores dos alertas | Apoio visual para uma paleta inspirada na identidade do site da INOA. |
-| `EmailTemplate.cs` | Template HTML | Apoio na construção e organização visual do e-mail de alerta. |
+| `MonitoringService.cs` | Estado inicial `Unknown` | Sugestão de uma forma para representar a primeira execução antes de existir uma faixa anterior. |
+| `MonitoringService.cs` | Retry da API | Implementação do método `GetStockQuoteWithRetryAsync`. |
+| `EmailService.cs` | SSL no SMTP | Sugestão de incluir uma linha habilitando o SSL no envio de emails. |
+| `EmailTemplate.cs` | Template HTML | construção e organização visual do e-mail de alerta baseado no site oficial da INOA. |
 
 ## Possíveis melhorias
 
@@ -203,9 +186,8 @@ Algumas evoluções possíveis para uma versão futura:
 - persistência do histórico de cotações em banco de dados;
 - monitoramento simultâneo de múltiplos ativos;
 - configuração do intervalo de monitoramento via `appsettings.json`;
-- testes unitários para regras de domínio e transições de faixa de preço;
+- testes unitários
 - logs estruturados;
-- abstração das integrações externas por interfaces para facilitar testes e substituição de provedores;
 - publicação do executável em uma GitHub Release.
 
 ## Build e publicação
@@ -216,7 +198,7 @@ Durante o desenvolvimento:
 dotnet run -- PETR4 45.00 35.00
 ```
 
-Para gerar uma versão de release para Windows:
+Caso necessário, pode-se gerar uma versão de release para Windows:
 
 ```bash
 dotnet publish -c Release -r win-x64 --self-contained false
