@@ -1,6 +1,6 @@
 # Stock Quote Alert
 
-Aplicação de console em C# para monitorar continuamente a cotação de um ativo da B3 e enviar alertas por e-mail quando o preço atingir os limites definidos para compra ou venda.
+Aplicação de console em C# para monitorar continuamente a cotação de um ativo da B3 e enviar alertas por e-mail quando o preço ficar acima da referência de venda ou abaixo da referência de compra.
 
 ## Como executar
 
@@ -40,7 +40,7 @@ Exemplo:
     "EnableSsl": true
   },
   "ApiSettings": {
-    "BaseUrl": "https://brapi.dev/api/quote/",
+    "BaseUrl": "https://brapi.dev/api/v2/stocks/quote?symbols=",
     "Token": ""
   }
 }
