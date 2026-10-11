@@ -214,7 +214,9 @@ Algumas evoluções possíveis para uma versão futura:
 
 - persistência do histórico de cotações em banco de dados;
 - monitoramento simultâneo de múltiplos ativos;
+- aumento das regras de negócio para monitoramento;
 - configuração do intervalo de monitoramento via `appsettings.json`;
+- configuração de mais APIs de monitoramento caso alguma fique fora do ar;
 - testes unitários
 - logs estruturados;
 - publicação do executável em uma GitHub Release.

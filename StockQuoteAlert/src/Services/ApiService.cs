@@ -17,6 +17,7 @@ public class ApiService
     {
         //Get
         HttpResponseMessage response = await client.GetAsync($"{baseUrl}{symbol}");
+        Console.WriteLine($"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] Requisição enviada para a BRAPI API: {symbol}.");
         
         //Errors Section
         HandleGetStockQuoteExpectedErrors(response, symbol);
