@@ -79,10 +79,10 @@ public class MonitoringService
 
     private static PriceZone GetPriceZone(Stock stock, decimal price)
     {
-        if (price >= stock.SellPrice)
+        if (price > stock.SellPrice)
             return PriceZone.Sell;
 
-        if (price <= stock.BuyPrice)
+        if (price < stock.BuyPrice)
             return PriceZone.Buy;
 
         return PriceZone.Neutral;

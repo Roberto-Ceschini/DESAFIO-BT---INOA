@@ -84,10 +84,38 @@ Exemplo:
 dotnet run -- PETR4 45.00 35.00
 ```
 
+Os preços podem ser informados com ponto ou vírgula como separador decimal e
+sem separador de milhares. Também são aceitos valores inteiros. Quando houver
+um separador, ele será sempre interpretado como separador decimal.
+
+Exemplos válidos:
+
+```text
+45.00
+45,00
+45
+0,50
+```
+
+Exemplos inválidos:
+
+```text
+1.234,90
+1,234.90
+R$ 35,00
+35,00,00
+```
+
+Por exemplo, a execução também pode usar vírgulas:
+
+```bash
+dotnet run -- PETR4 45,00 35,00
+```
+
 Durante a execução:
 
-- se a cotação ficar **igual ou acima** do preço de venda, um alerta de venda é enviado;
-- se a cotação ficar **igual ou abaixo** do preço de compra, um alerta de compra é enviado;
+- se a cotação ficar **acima** do preço de venda, um alerta de venda é enviado;
+- se a cotação ficar **abaixo** do preço de compra, um alerta de compra é enviado;
 - se o ticker não for encontrado, a aplicação informa o erro e encerra;
 - falhas temporárias da API são tratadas com até três tentativas antes de encerrar o monitoramento.
 

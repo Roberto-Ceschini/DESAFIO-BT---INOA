@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Globalization;
 
 public class Program
 {
@@ -9,8 +10,8 @@ public class Program
             HandleUserExpectedErrors(args);
 
             string symbol = args[0].ToUpper();
-            decimal sellPrice = decimal.Parse(args[1]);
-            decimal buyPrice = decimal.Parse(args[2]);
+            decimal sellPrice = decimal.Parse(args[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+            decimal buyPrice = decimal.Parse(args[2].Replace(',', '.'), CultureInfo.InvariantCulture);
 
             Stock stock = new(symbol, sellPrice, buyPrice);
 
@@ -53,8 +54,8 @@ public class Program
         }
 
         //As linhas abaixo foram geradas por IA pois eu nao sabia da funcao TryParse do C#
-        if (!decimal.TryParse(args[1], out _)
-            || !decimal.TryParse(args[2], out _))
+        if (!decimal.TryParse(args[1].Replace(',', '.'), CultureInfo.InvariantCulture, out _)
+            || !decimal.TryParse(args[2].Replace(',', '.'), CultureInfo.InvariantCulture, out _))
         {
             throw new ArgumentException(
                 "Os preços informados são inválidos."
