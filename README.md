@@ -70,6 +70,32 @@ Para remover todos:
 dotnet user-secrets clear
 ```
 
+### Sobre a BRAPI
+
+Segundo a [documentação oficial da BRAPI](https://brapi.dev/faq/quais-as-limitacoes),
+o plano Gratuito permite 15.000 requisições por ciclo mensal, com 1 ticker por
+chamada e cotações com atraso aproximado de 30 minutos. Portanto, os dados não
+são em tempo real, mas também não são necessariamente do dia anterior. A cota
+é renovada na data indicada no dashboard da BRAPI, que pode não coincidir com
+o primeiro dia do mês.
+
+Como a aplicação consulta a cotação a cada 10 segundos, uma execução contínua
+consome aproximadamente:
+
+| Período | Requisições |
+| --- | ---: |
+| 1 minuto | 6 |
+| 1 hora | 360 |
+| 1 dia | 8.640 |
+| 30 dias | 259.200 |
+
+Nesse ritmo, as 15.000 requisições do plano Gratuito seriam consumidas em
+aproximadamente **41 horas e 40 minutos**. Para distribuir a cota por 30 dias
+de execução contínua, o intervalo médio entre consultas precisaria ser de pelo
+menos **2 minutos e 53 segundos**. O intervalo atual de 10 segundos é adequado
+para testes curtos, mas não para manter a aplicação ligada continuamente no
+plano Gratuito.
+
 ### Execução
 
 O programa recebe três argumentos:
@@ -191,7 +217,7 @@ Dados sensíveis, como senha SMTP e token da API, são armazenados com `.NET Use
 
 ## Uso de Inteligência Artificial
 
-O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas específicas, escolha dos tipos de erros e sintaxe de C#/.NET. A lógica principal, as decisões arquiteturais e a solução final foram desenvolvidas e revisadas.
+O uso de IA foi pontual e utilizado como ferramenta de apoio para dúvidas específicas, testes, escolha dos tipos de erros e sintaxe de C#/.NET. A lógica principal, as decisões arquiteturais e a solução final foram desenvolvidas e revisadas.
 
 | Arquivo | Finalidade | Uso da IA |
 | --- | --- | --- |

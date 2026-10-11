@@ -1,6 +1,7 @@
 public class MonitoringService
 {
     private const int MaxApiAttempts = 3;//Linha gerada por IA
+    private static readonly TimeSpan MonitoringInterval = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(5); //Linnha gerada por IA
 
     private readonly ApiService apiService;
@@ -42,7 +43,7 @@ public class MonitoringService
             // Update the previous zone for the next iteration
             previousZone = currentZone;
 
-            await Task.Delay(5000);
+            await Task.Delay(MonitoringInterval);
         }
     }
 
